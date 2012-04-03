@@ -6,7 +6,7 @@ In their own words:
 
 _CurdBee is a simple web application that makes billing a breeze. Use it to send estimates and invoices, track time and expenses, and accept online payments. Say goodbye to paperwork!_
 
-You can get more info on the CurdBee site at http://www.curdbee.com/
+You can get more info from the CurdBee site at http://www.curdbee.com/
 
 ##About CurdBeePHP
 
@@ -14,7 +14,11 @@ CurdBeePHP is a simple wrapper for the CurdBee API written in PHP. It is fairly 
 
 CurdBeePHP is not in any way associated with CurdBee. I started using them for my online invoicing and I wanted a way to tie it in with a few other services. There didn't seem to be a PHP wrapper available, so I whipped one up.
 
-I offer no support or warranty with this code. If while using it all your data goes away, I take no responsibility. I also can't help you implement it / debug your code. My apologies in advance, I'm simply short on time. On the plus side I've tried to document it reasonably well both here and in the code, so you shouldn't have any problems figuring it out. 
+### Warranty / Support
+
+I offer no support or warranty with this code. If while using it all your data goes away, I take no responsibility. I also can't help you implement it / debug your code. My apologies in advance, I'm simply short on time. On the plus side I've tried to document it reasonably well both here and in the code, so assuming you're familiar with PHP you shouldn't have any problems figuring it out. 
+
+### Bugs / Patches
 
 You can email me at travis@ravis.org regarding bugs (please try and ensure it's a bug in CurdBeePHP and not in your code before contacting me) or patches and I'll reply / fix / merge as my time allows.
 
@@ -22,11 +26,11 @@ You can email me at travis@ravis.org regarding bugs (please try and ensure it's 
 
 There are a few things that all function in CurdBeePHP do the same, and it's easier to lay it out here once than re-state it in the docs for every function.
 
-Where this document doesn't cover something (required fields, what each field does, etc), refer to the CurdBee API documentation at http://curdbee.com/api/. To keep things simple / consistant I've tried to keep the function names and  field names the same between the CurdBeePHP data objects and the CurdBee API.
+Where this document doesn't cover something (required fields, what each field does, etc), refer to the CurdBee API documentation at http://curdbee.com/api/. To keep things simple / consistent I've tried to keep the function names in the main CurdBee object and the field names in the CurdBeePHP data objects the same as are used in the CurdBee API.
 
 ###Return Values
 
-All the functions will return the appropriate object (if the API returns data) or TRUE for functions like DeleteClient that don't return data. 
+All the functions will return the appropriate data object (if the API returns data) or TRUE for functions like DeleteClient that don't return data. 
 
 ###Errors
 
@@ -46,32 +50,34 @@ For the examples below I'm skipping all that so it's a little easier to read.
 
 CurdBeePHP uses simple data objects to pass data into and receive data from the main CurdBeePHP object. There are data classes for clients (CurdBeeClient), invoices (CurdBeeInvoice), invoice line items (CurdBeeInvoiceLine) and payments (CurdBeePayment). 
 
-Each data object has required variables, optional variables, and read only variables. Required variables must be set when creating a new record or you'll get errors back from the API. Optional may be set, if they aren't they'll either be blank or will inherit your CurdBee default settings , depending on the field. Read only variables are variables that will not be saved and are populated by the data sent back from the CurdBee API.
+Each data object has required variables, optional variables, and read only variables. Required variables must be set when creating a new record or you'll get errors back from the API. Optional variables may be set, if they aren't they'll either be blank or will inherit your CurdBee default settings , depending on the field. Read only variables will not be saved and are populated by the data sent back from the CurdBee API.
 
 ###Listing Data
 
-When you request a list of items from the API (vs a single record), for example a list of clients, CurdBeePHP will return an associative array of the appropriate data object (in this example, CurdBeeClient). The keys of the array will be the CurdBee ID fields, in this example, the CurdBee client IDs. This makes it easy to find a particular record in the result set without traversing the entire array. Of course you can still look through the entire result set using foreach if you want.
+When you request a list of items from the API (vs a single record), for example a list of clients, CurdBeePHP will return an associative array of the appropriate data object (in this example, CurdBeeClient). The keys of the array will be the CurdBee ID fields, in this example, the CurdBee client IDs. This makes it easy to find a particular record in the result set without traversing the entire array. Of course you can still look through the entire result set using foreach if you need to.
 
 ###Record IDs
 
-Please be aware that CurdBee's IDs are likely not your IDs. CurdBee IDs are assigned when you create an object (client/invoice/payment). If you maintain separate client lists, the CurdBee client ID will not match your ID, so you'll need to store it somewhere. You can always get the CurdBee ID from the returned object after you call Create (CreateClient, CreateInvoice, CreatePayment). 
+Be aware that CurdBee's IDs are likely not your IDs. CurdBee IDs are assigned when you create an object (client/invoice/payment). If you maintain separate client lists, the CurdBee client ID will not match your ID, so you'll need to store it somewhere on your end (CurdBeePHP doesn't handle this). You can always get the CurdBee ID from the returned object after you call Create (CreateClient/CreateInvoice/CreatePayment). 
 
 For example:
 
 	$client = $curdbee->CreateClient($client);
 	$curdBeeClientId = $client->id;
 
+###Date Formating
+
+When passing dates to and from the CurdBee API, use the format YYYY/MM/DD. For example, "2012/04/28".
+
 ## Getting Started
 
-Here's a quick example for creating a client. You can use this example with all the other function calls as well, substituting the appropriate data object, variables, and function calls as documented below.
+Here's a quick example for creating a CurdBee client. You can use this example for any of the other functions documented below, just substitute the appropriate data object / variable / API call with the action you wish to perform.
 
 ###Creating a CurdBeePHP Object
 
-So let's get started using CurdBeePHP to access the CurdBee API...
-
 The first thing you'll need to do is create a new CurdBee object, you'll use this object to interact with the CurdBee API. When creating the object you must pass your subdomain and API Token. Your subdomain is how you normally access CurdBee. For example, if you access your CurdBee admin area via https://mycompany.curdbee.com/ then your subdomain will be "mycompany". Your API Token can be retrieved from the "Your Profile" page on CurdBee once you've logged in.
 
-If you access your admin area via a CNAME (eg: billing.mycompany.com) you'll need to find out the actual curdbee subdomain and use that instead.
+If you access your admin area via a CNAME (eg: billing.mycompany.com) you'll need to find out the actual curdbee subdomain and use that instead of your CNAME.
 
 	$curdbee = new CurdBee('mycompany','abc123');
 
@@ -79,7 +85,7 @@ Once you have your CurdBee object you can start performing API calls with it.
 
 ###Creating a New Client
 
-To create a new client you need to create a new CurdBeeClient object and populate it with data. You can then pass that object to the main CurdBee object, which will pass it on to the CurdBee servers. Name is the only required field (at the moment) but you can optionally populate any of the other fields as well. Any fields left blank (or set to null) will be left blank or inherit the defaults in your CurdBee account settings (eg: currency_id).
+To create a new client you need to create a new CurdBeeClient data object and populate it with the values you wish to save. You can then pass that data object to the main CurdBee object, which will pass it on to the CurdBee servers and get back a response. When creating a client, "name" is the only required field, but you can optionally populate any of the other fields as well. Any fields left blank (or set to null) will be left blank (eg: email) or inherit the defaults in your CurdBee account settings (eg: currency_id).
 
 	$client = new CurdBeeClient();
 	$client->name = 'Client Name';
@@ -94,7 +100,7 @@ To create a new client you need to create a new CurdBeeClient object and populat
 	$client->fax = '1 (123)456-7890';
 	$client->custom_field_name = 'Client Tax Code';
 	$client->custom_field_value = '1234567890';
-	
+
 Now that you have the CurdBeeClient object filled out you can pass it to the main CurdBee object.
 
 	$newClient = $curdbee->CreateClient($client);
@@ -110,13 +116,122 @@ The returned object will have all the variables you set as well as the additiona
 
 ## Data Object Reference
 
-### Client Object
+### Client Object (CurdBeeClient)
+
+Stores data for a single client.
+
+####Required Fields
+
+* name _- only required when creating a client, optional when updating_
+
+####Optional Fields
+
+* email
+* currency_id _- the CurdBee numeric currency ID (see CurdBee::ListCurrencies)_
+* address
+* city
+* province
+* zip_code
+* country
+* phone
+* fax
+* custom_field_name
+* custom_field_value
+
+####Read Only Fields
+
+These fields will not be sent to the server, setting them will have no effect. However when CurdBeePHP passes back a CurdBeeClient object, you can read these fields to find out additional information about the client.
+
+* id _- the CurdBee client ID_
+* created_at
+* updated_at
+* send_copy
+* full_address_with_comma
+* currency
 
 ### Invoice Object
 
+Stores data for a single invoice and it's associated invoice lines.
+
+#### Required Fields
+
+* client_id _- only required when creating an invoice, optional when updating_
+
+#### Optional Fields
+
+* line_items _- an array of CurdBeeInvoiceLine objects_
+* discount
+* notes
+* date
+* shipping
+* due_date
+* summary
+* invoice_no _- your own internal invoice number, not to be confused with CurdBee's invoice ID_
+* allow_partial_payments
+* shipping_amount
+* tax
+* tax2
+
+#### Read Only Fields
+
+These fields will not be sent to the server, setting them will have no effect. However when CurdBeePHP passes back a CurdBeeInvoice object, you can read these fields to find out additional information about the invoice.
+
+* id _- the CurdBee client ID_
+* created_at
+* updated_at
+* total_billed
+* total_due
+* tax2_compound
+* discount_amount
+* hash_key
+* tax_amount
+* client _- a CurdBeeClient object with only certain fields filled in_
+* payment_options
+* tax2_amount
+* sub_total
+* paid_total
+* state _- the "status" of the invoice (open, closed, etc)_
+
 ### Invoice Line Object
 
+Stores data for a single line on an invoice. You cannot pass CurdBeeInvoiceLine objects to the API by themselves, they're always added to an invoice first.
+
+#### Required Fields
+
+* name_and_description
+* price
+* quantity
+* unit _- a string describing what "1" is (eg: 'item','hour','meter',etc)_
+
+#### Optional Fields
+
+None
+
+#### Read Only Fields
+
+* id _- the CurdBee invoice line item ID_
+* sort_order
+* total
+
 ### Payment Object
+
+Stores data for a single payment.
+
+#### Required Fields
+
+* date
+* amount
+
+#### Optional Fields
+
+* payment_method
+
+#### Read Only Fields
+
+* id _- the CurdBee payment ID_
+* created_at
+* updated_at
+* balance
 
 ## API Function Calls
 
@@ -246,13 +361,62 @@ ListInvoices returns an associative array of CurdBeeInvoice objects, with the ar
 
 #### Deleting an Invoice
 
+	$curdbee->DeleteInvoice($InvoiceID);
+	
+* $InvoiceID is the CurdBee invoice ID you wish to delete.
+
+DeleteInvoice returns TRUE.
+
 ### Payment Functions
 
 CurdBee payments are always attached to an invoice, so all payment functions require a CurdBee invoice ID. Note this isn't your **invoice number** (a string, possibly numeric, which you select) but the **invoice ID** (an integer automatically assigned by CurdBee when an invoice is created).
 
 #### Creating a Payment
 
+	$curdbee->CreatePayment($InvoiceID,$Payment);
+	
+* $InvoiceID is the CurdBee invoice ID to apply the payment to.
+* $Payment is a CurdBeePayment object containing the payment information to apply. The fields "date" and "amount" are required.
+
+CreatePayment returns a single CurdBeePayment object.
+
 #### Updating an Existing Payment
 
+	$curdbee->UpdatePayment($InvoiceID,$PaymentID,$Payment);
+	
+* $InvoiceID is the CurdBee invoice ID to apply the payment to.
+* $PaymentID is the CurdBee payment ID to update.
+* $Payment is a CurdBeePayment object containing the payment information to update.
+
+UpdatePayment returns a single CurdBeePayment object.
+
+#### List Payments
+
+Lists all payments that have been applied/attached to an invoice. Note there is no way to list all payments globally, you must specify an invoice ID.
+
+	$curdbee->ListPayments($InvoiceID);
+	
+* $InvoiceID is the CurdBee invoice ID you wish to retrieve payments for.
+
+ListPayments returns an associative array of CurdBeePayment objects, with the array keys being the CurdBee payment IDs.
+
+#### Show a Payment
+
+Retrieves a single payment from CurdBee.
+
+	$curdbee->ShowPayment($InvoiceID,$PaymentID);
+	
+* $InvoiceID is the CurdBee invoice ID the payment you wish to retrieve is attached/applied to.
+* $PaymentID is the CurdBee payment ID to retrieve.
+
+ShowPayment returns a single CurdBeePayment object.
+
 #### Deleting a Payment
+
+	$curdbee->DeletePayment($InvoiceID,$PaymentID);
+	
+* $InvoiceID is the CurdBee invoice ID that the payment you want to delete is attached to.
+* $PaymentID is the CurdBee payment ID to delete.
+
+DeletePayment returns TRUE.
 
