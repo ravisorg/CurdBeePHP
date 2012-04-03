@@ -101,8 +101,10 @@ class CurdBee {
 	 */
 	public function ListInvoices($Page=1,$PerPage=10,$Filters=null) {
 		$url = '/invoices.json?per_page='.urlencode($PerPage).'&page='.urlencode($Page);
-		foreach ($Filters as $FilterKey=>$FilterValue) {
-			$url .= '&'.urlencode($FilterKey).'='.urlencode($FilterValue);
+		if ($Filters) {
+			foreach ($Filters as $FilterKey=>$FilterValue) {
+				$url .= '&'.urlencode($FilterKey).'='.urlencode($FilterValue);
+			}
 		}
 		$invoices = $this->IndexBy('id',$this->GET($url),'invoice','CurdBeeInvoice');
 		foreach ($invoices as &$invoice) {
@@ -156,6 +158,65 @@ class CurdBee {
 		$invoice->line_items = $this->IndexBy('id',$invoice->line_items,null,'CurdBeeInvoiceLine');
 		$invoice->client = $this->ConvertTo($invoice->client,'CurdBeeClient');
 		return $invoice;
+	}
+
+	/**
+	 * Close an invoice.
+	 * @param integer $InvoiceID The CurdBee invoice ID to close.
+	 * @return boolean TRUE
+	 */
+	public function CloseInvoice($InvoiceID) {
+		$url = '/invoices/'.$InvoiceID.'/close.json';
+		return $this->POST($url);
+	}
+
+	/**
+	 * Reopen a closed invoice.
+	 * @param integer $InvoiceID The CurdBee invoice ID to reopen.
+	 * @return boolean TRUE
+	 */
+	public function ReopenInvoice($InvoiceID) {
+		$url = '/invoices/'.$InvoiceID.'/reopen.json';
+		return $this->POST($url);
+	}
+
+	/**
+	 * Delivery (eg: email) an invoice.
+	 * @param integer $InvoiceID The CurdBee invoice ID to deliver.
+	 * @param mixed $Recipients The email address(es) to deliver to. Can either be a
+	 * string (a single address) or an array of strings (multiple addresses). No validation
+	 * is performed on the address to make sure it's valid.
+	 * @param mixed $BlindCopy The email address(es) to BCC in the email. Can either be a
+	 * string (a single address) or an array of strings (multiple addresses). No validation
+	 * is performed on the address to make sure it's valid.
+	 * @return boolean TRUE
+	 */
+	public function DeliverInvoice($InvoiceID,$Recipients,$BlindCopy=null) {
+		$url = '/deliver/invoice/'.$InvoiceID.'.json';
+		if (!is_array($Recipients)) {
+			$Recipients = array($Recipients);
+		}
+		else {
+			// re-key the array (if it's an associative array, de-associate it)
+			$Recipients = array_values($Recipients);
+		}
+		$data = array(
+			'delivery'=>array(
+				'recipients'=>$Recipients
+			)
+		);
+		if ($BlindCopy) {
+			if (!is_array($BlindCopy)) {
+				$BlindCopy = array($BlindCopy);
+			}
+			else {
+				// re-key the array (if it's an associative array, de-associate it)
+				$BlindCopy = array_values($BlindCopy);
+			}
+			$data['delivery']['blind_copy'] = $BlindCopy;
+		}
+		$data = json_encode($data);
+		return $this->POST($url,$data);
 	}
 
 	/**
@@ -457,7 +518,7 @@ class CurdBeeBase {
 class CurdBeeClient extends CurdBeeBase {
 	public $name = null;
 	public $email = null;
-	public $currency = null;
+	public $currency_id = null;
 	public $address = null;
 	public $city = null;
 	public $province = null;
@@ -474,11 +535,12 @@ class CurdBeeClient extends CurdBeeBase {
 	public $updated_at = null;
 	public $send_copy = null;
 	public $full_address_with_comma = null;
+	public $currency = null;
 
 	protected $DataFields = array(
 		'name'=>'name',
 		'email'=>'email',
-		'currency'=>'currency',
+		'currency_id'=>'currency_id',
 		'address'=>'address',
 		'city'=>'city',
 		'province'=>'province',
@@ -496,7 +558,6 @@ class CurdBeeClient extends CurdBeeBase {
  * A simple class to store data for a CurdBee invoice.
  */
 class CurdBeeInvoice extends CurdBeeBase {
-	public $tax = null;
 	/**
 	 * This must be an array of CurdBeeInvoiceLine objects.
 	 */
@@ -511,6 +572,8 @@ class CurdBeeInvoice extends CurdBeeBase {
 	public $invoice_no = null;
 	public $allow_partial_payments= null;
 	public $shipping_amount = null;
+	public $tax = null;
+	public $tax2 = null;
 
 	// Setting these values will have no effect (they won't be saved)
 	public $id = null;
