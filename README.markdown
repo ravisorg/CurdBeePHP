@@ -20,13 +20,13 @@ I offer no support or warranty with this code. If while using it all your data g
 
 ### Bugs / Patches
 
-You can email me at travis@ravis.org regarding bugs (please try and ensure it's a bug in CurdBeePHP and not in your code before contacting me) or patches and I'll reply / fix / merge as my time allows.
+You can post an issue to the [CurdBeePHP issues page on GitHub](https://github.com/ravisorg/CurdBeePHP/issues) regarding bugs (please try and ensure it's a bug in CurdBeePHP and not in your code before contacting me) or patches and I'll reply / fix / merge as my time allows.
 
 ##General Principles
 
 There are a few things that all function in CurdBeePHP do the same, and it's easier to lay it out here once than re-state it in the docs for every function.
 
-Where this document doesn't cover something (required fields, what each field does, etc), refer to the CurdBee API documentation at http://curdbee.com/api/. To keep things simple / consistent I've tried to keep the function names in the main CurdBee object and the field names in the CurdBeePHP data objects the same as are used in the CurdBee API.
+Where this document doesn't cover something (required fields, what each field does, etc), refer to the [CurdBee API documentation](http://curdbee.com/api/). To keep things simple / consistent I've tried to keep the function names in the main CurdBee object and the field names in the CurdBeePHP data objects the same as are used in the CurdBee API.
 
 ###Return Values
 
