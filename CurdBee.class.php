@@ -5,7 +5,7 @@
  */
 class CurdBee {
 
-	private $Version = "0.1";
+	private $Version = "0.2";
 
 	protected $Subdomain = null;
 
@@ -379,7 +379,7 @@ class CurdBee {
 	 * @param string $data The data to POST in the body of the request.
 	 * @return mixed JSON decided data from the server.
 	 */
-	protected function POST($url,$data) {
+	protected function POST($url,$data=null) {
 		return $this->HTTP('POST',$url,$data);
 	}
 
@@ -389,7 +389,7 @@ class CurdBee {
 	 * @param string $data The data to PUT in the body of the request.
 	 * @return mixed JSON decided data from the server.
 	 */
-	protected function PUT($url,$data) {
+	protected function PUT($url,$data=null) {
 		return $this->HTTP('PUT',$url,$data);
 	}
 
@@ -476,9 +476,9 @@ class CurdBee {
 				}
 			}
 			else {
-				$error = $HTTPStatus.' '.$HTTPMessage;
+				$error = $HTTPMessage;
 			}
-			throw new Exception($error);
+			throw new Exception($error,$HTTPStatus);
 		}
 
 		if ($body) {
@@ -579,8 +579,6 @@ class CurdBeeInvoice extends CurdBeeBase {
 	public $id = null;
 	public $created_at = null;
 	public $updated_at = null;
-	public $send_copy = null;
-	public $full_address_with_comma = null;
 	public $total_billed = null;
 	public $total_due = null;
 	public $tax2_compound = null;
