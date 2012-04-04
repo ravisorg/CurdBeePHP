@@ -14,6 +14,35 @@ CurdBeePHP is a simple wrapper for the CurdBee API written in PHP. It is fairly 
 
 CurdBeePHP is not in any way associated with CurdBee. I started using them for my online invoicing and I wanted a way to tie it in with a few other services. There didn't seem to be a PHP wrapper available, so I whipped one up.
 
+### License
+
+CurdBeePHP is licensed under the Modified BSD License (aka the 3 Clause BSD). Basically you can use it for any purpose, including commercial, so long as you leave the copyright notice intact and don't use my name or the names of any other contributors to promote products derived from CurdBeePHP.
+
+	Copyright (c) 2012, Travis Richardson
+	All rights reserved.
+	
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+	    * Redistributions of source code must retain the above copyright
+	      notice, this list of conditions and the following disclaimer.
+	    * Redistributions in binary form must reproduce the above copyright
+	      notice, this list of conditions and the following disclaimer in the
+	      documentation and/or other materials provided with the distribution.
+	    * Neither the name of the Travis Richardson nor the names of its 
+	      contributors may be used to endorse or promote products derived 
+	      from this software without specific prior written permission.
+	
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+	DISCLAIMED. IN NO EVENT SHALL TRAVIS RICHARDSON BE LIABLE FOR ANY
+	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 ### Warranty / Support
 
 I offer no support or warranty with this code. If while using it all your data goes away, I take no responsibility. I also can't help you implement it / debug your code. My apologies in advance, I'm simply short on time. On the plus side I've tried to document it reasonably well both here and in the code, so assuming you're familiar with PHP you shouldn't have any problems figuring it out. 
