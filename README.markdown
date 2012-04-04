@@ -10,7 +10,7 @@ You can get more info from the CurdBee site at http://www.curdbee.com/
 
 ##About CurdBeePHP
 
-CurdBeePHP is a simple wrapper for the CurdBee API written in PHP. It is fairly self contained and only requires base PHP5 functionality (like json_encode) and PHP sockets with SSL, all of which you should find on most any PHP host. You can use CurdBeePHP to perform any client, invoice, and payment actions currently supported by the CurdBee API. Recurring profiles, estimates, and items aren't supported yet, but if you need them let me know and I'll look at implementing them (or better, submit a patch that does the job and I'll merge it in).
+CurdBeePHP is a simple wrapper for the CurdBee API written in PHP. It is fairly self contained and only requires PHP 5.2 functionality (like json_encode) and PHP sockets with SSL, all of which you should find on most any PHP host. You can use CurdBeePHP to perform any client, invoice, and payment actions currently supported by the CurdBee API. Recurring profiles, estimates, and items aren't supported yet, but if you need them let me know and I'll look at implementing them (or better, submit a patch that does the job and I'll merge it in).
 
 CurdBeePHP is not in any way associated with CurdBee. I started using them for my online invoicing and I wanted a way to tie it in with a few other services. There didn't seem to be a PHP wrapper available, so I whipped one up.
 
